@@ -9,8 +9,8 @@ export const Home = () => {
 			<Navbar />
 			<div class="h-screen flex items-center relative justify-center">
 				<div class="pattern_background w-full h-full absolute top-0 left-0 -z-10" />
-				<div class="px-8">
-					<h1 class="text-3xl max-w-[800px] line leading-snug font-bold capitalize mb-8 font-Source_Sans_Pro">
+				<div class="px-8 flex items-center flex-col">
+					<h1 class="text-3xl max-w-[800px] line leading-snug text-center font-bold capitalize mb-8 font-Source_Sans_Pro">
 						Welcome to{" "}
 						<span class="rounded-md bg-slate-300 tracking-wider font-semibold bg-gradient-to-r from-blue-700 to-blue-400 text-transparent bg-clip-text">
 							Noteer
