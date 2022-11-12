@@ -5,6 +5,8 @@ module.exports = {
 		extend: {
 			fontFamily: {
 				Montserrat: ["Montserrat", "sans-serif"],
+				Source_Sans_Pro: ["Source_Sans_Pro", "sans-serif"],
+				Roboto: ["Roboto", "sans-serif"],
 				Raleway: ["Raleway", "sans-serif"],
 			},
 		},
