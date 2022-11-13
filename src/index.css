@@ -44,3 +44,8 @@ code {
 
 	/* background-repeat: repeat; */
 }
+
+/* focus correction for Prose MIrror */
+.ProseMirror-focused {
+	outline: none;
+}

@@ -1,9 +1,10 @@
-import { Notepad } from "../layouts/Notepad";
 import { FileTree } from "../layouts/FileTree";
+import { Notepad } from "../layouts/Notepad";
+
 export const Notes = () => {
 	return (
-		<div>
-			{/* <FileTree /> */}
+		<div class="h-screen md:flex bg-slate-100">
+			<FileTree />
 			<Notepad />
 		</div>
 	);
