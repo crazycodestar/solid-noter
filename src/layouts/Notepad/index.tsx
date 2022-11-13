@@ -1,9 +1,8 @@
-import { createTiptapEditor, createEditorTransaction } from "solid-tiptap";
-import { Editor } from "@tiptap/core";
+import { createTiptapEditor } from "solid-tiptap";
 import StarterKit from "@tiptap/starter-kit";
 import BubbleMenu from "@tiptap/extension-bubble-menu";
 import { createSignal, JSX, Show } from "solid-js";
-import { Toggle, Toolbar } from "solid-headless";
+import { Toolbar } from "solid-headless";
 import { CONTENT } from "./components/content";
 import { ToolbarContents } from "./components/ToolbarContents";
 
@@ -21,7 +20,7 @@ export function Notepad(): JSX.Element {
 		],
 		editorProps: {
 			attributes: {
-				class: "p-8 focus:outline-none prose max-w-full",
+				class: "focus:outline-none w-full",
 			},
 		},
 		content: CONTENT,
@@ -29,20 +28,29 @@ export function Notepad(): JSX.Element {
 
 	return (
 		<div class="md:mt-6 md:rounded-md md:mb-6 md:mr-6 w-full bg-white flex flex-col">
-			<div class="flex-1 m-16">
-				<Toolbar
-					ref={setMenu}
-					class="dynamic-shadow bg-gradient-to-bl from-indigo-500 to-blue-600 text-white rounded-lg"
-					horizontal
-				>
-					<Show when={editor()} keyed>
-						{(instance) => <ToolbarContents editor={instance} />}
-					</Show>
-				</Toolbar>
-				<div
-					class="w-full h-max max-h-max max-w-3xl focus:outline-none overflow-y-auto flex justify-center px-6 pt-12 ml-auto mr-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent"
-					ref={setContainer}
-				/>
+			<Toolbar
+				ref={setMenu}
+				class="dynamic-shadow bg-gradient-to-bl from-indigo-500 to-blue-600 text-white rounded-lg"
+				horizontal
+			>
+				<Show when={editor()} keyed>
+					{(instance) => <ToolbarContents editor={instance} />}
+				</Show>
+			</Toolbar>
+			<div class="text-lg font-semibold capitalize pb-2 pt-4 px-4 mb-4 border-b-2 flex space-x-2 items-center">
+				<h1>file 1</h1>
+				<div class="rounded-full w-4 h-4 bg-red-300" />
+			</div>
+			<div class="pt-16 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent w-full max-h-max px-6 flex flex-col">
+				<div class="flex flex-col items-center h-full">
+					<textarea
+						cols={1}
+						rows={1}
+						placeholder="Title"
+						class="resize-none scrollbar-none focus:outline-none max-w-2xl w-full text-3xl mb-4 tracking-wide"
+					/>
+					<div class="max-w-2xl w-full h-full" ref={setContainer} />
+				</div>
 			</div>
 		</div>
 	);
