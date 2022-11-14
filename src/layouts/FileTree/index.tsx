@@ -1,6 +1,15 @@
 import { BsPlus, BsChevronLeft } from "solid-icons/bs";
+import { For } from "solid-js";
+import type { NoteType, Id } from "../../pages/Notes";
 
-export const FileTree = () => {
+interface IFileTreeProps {
+	notes: NoteType[];
+	selectNote: (id: Id) => void;
+	createNote: () => void;
+	deleteNote: (id: Id) => void;
+}
+
+export const FileTree = (props: IFileTreeProps) => {
 	return (
 		<div class="fixed md:static z-50">
 			<div class="absolute w-screen h-screen bg-black opacity-40 top-0 left-0 md:hidden" />
@@ -19,19 +28,25 @@ export const FileTree = () => {
 						</span>
 					</div>
 					<ul class="space-y-3 mt-3">
-						<li class="bg-slate-200 rounded-md capitalize cursor-pointer p-2 space-x-2 flex items-center hover:bg-slate-100">
-							file 1
-						</li>
-						<li class="rounded-md capitalize cursor-pointer p-2 space-x-2 flex items-center hover:bg-slate-100">
-							file 1
-						</li>
-						<li class="rounded-md capitalize cursor-pointer p-2 space-x-2 flex items-center hover:bg-slate-100">
-							file 1
-						</li>
-						<li class="rounded-md capitalize cursor-pointer p-2 space-x-2 flex items-center hover:bg-slate-100">
-							file 1
-						</li>
-						<li class="rounded-md capitalize cursor-pointer p-2 border-t-2 space-x-2 flex items-center hover:bg-slate-100">
+						<For each={props.notes}>
+							{(note) => {
+								return (
+									<li
+										onClick={() => props.selectNote(note.id)}
+										class={`rounded-md capitalize cursor-pointer p-2 space-x-2 flex items-center hover:bg-slate-100 ${
+											note.selected ? "bg-slate-200" : ""
+										}`}
+									>
+										{note.filename}
+									</li>
+								);
+							}}
+						</For>
+						<hr class="border-t-2" />
+						<li
+							onClick={props.createNote}
+							class="rounded-md capitalize cursor-pointer p-2 space-x-2 flex items-center hover:bg-slate-100"
+						>
 							<BsPlus size={24} /> <p>New Note</p>
 						</li>
 					</ul>

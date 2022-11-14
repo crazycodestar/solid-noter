@@ -49,3 +49,27 @@ code {
 .ProseMirror-focused {
 	outline: none;
 }
+
+@layer components {
+	.content h1 {
+		@apply font-bold text-3xl;
+	}
+	.content h2 {
+		@apply font-medium text-2xl;
+	}
+	.content ul {
+		@apply list-disc ml-4;
+	}
+	.content ol {
+		@apply list-decimal ml-4;
+	}
+	.content pre {
+		@apply p-4 rounded-md bg-slate-200 my-2;
+	}
+	.content blockquote {
+		@apply border-l-2 pl-4 my-2 border-l-slate-400;
+	}
+	.content code {
+		@apply rounded-md py-1 px-2 bg-slate-200;
+	}
+}

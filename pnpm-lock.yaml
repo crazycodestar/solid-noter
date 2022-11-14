@@ -5,6 +5,7 @@ specifiers:
   '@tiptap/extension-bubble-menu': 2.0.0-beta.202
   '@tiptap/starter-kit': 2.0.0-beta.202
   autoprefixer: ^10.4.13
+  immer: ^9.0.16
   postcss: ^8.4.19
   solid-headless: ^0.13.0
   solid-icons: ^1.0.4
@@ -20,6 +21,7 @@ dependencies:
   '@tiptap/core': 2.0.0-beta.202
   '@tiptap/extension-bubble-menu': 2.0.0-beta.202_fosglmwb3u6jhi6bbjmnlbdsbu
   '@tiptap/starter-kit': 2.0.0-beta.202
+  immer: 9.0.16
   solid-headless: 0.13.0_solid-js@1.5.1
   solid-icons: 1.0.4_solid-js@1.5.1
   solid-js: 1.5.1
@@ -1126,6 +1128,10 @@ packages:
   /html-entities/2.3.2:
     resolution: {integrity: sha512-c3Ab/url5ksaT0WyleslpBEthOzWhrjQbg75y7XUsfSzi3Dgzt0l8w5e7DylRn15MTlMMD58dTfzddNS2kcAjQ==}
     dev: true
+
+  /immer/9.0.16:
+    resolution: {integrity: sha512-qenGE7CstVm1NrHQbMh8YaSzTZTFNP3zPqr3YU0S0UY441j4bJTg4A2Hh5KAhwgaiU6ZZ1Ar6y/2f4TblnMReQ==}
+    dev: false
 
   /is-binary-path/2.1.0:
     resolution: {integrity: sha512-ZMERYes6pDydyuGidse7OsHxtbI7WVeUEozgR/g7rd0xUimYNlvZRE/K2MgZTjWy725IfelLeVcEM97mmtRGXw==}
