@@ -29,7 +29,7 @@ const NOTES = [
 	},
 ];
 
-export const Notes = () => {
+const Notes = () => {
 	const initNotes: NoteType[] = NOTES.map((note) => ({
 		...note,
 		selected: false,
@@ -121,3 +121,5 @@ export const Notes = () => {
 		</div>
 	);
 };
+
+export default Notes;

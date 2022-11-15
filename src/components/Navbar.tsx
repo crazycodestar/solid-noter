@@ -1,13 +1,18 @@
 import { SiBuymeacoffee } from "solid-icons/si";
 import { BsList } from "solid-icons/bs";
 import { createSignal, Show } from "solid-js";
+import { useNavigate } from "@solidjs/router";
 
 export const Navbar = () => {
+	const navigate = useNavigate();
 	const [dropdownState, setDropdownState] = createSignal<boolean>(true);
 	// make dropdown true when not in mobile view
 	return (
 		<div class="backdrop-blur-sm h-16 fixed top-0 md:justify-between w-screen flex items-center justify-between px-8 z-50">
-			<h1 class="text-2xl font-bold tracking-wider font-Source_Sans_Pro ">
+			<h1
+				onClick={() => navigate("/")}
+				class="text-2xl font-bold tracking-wider font-Source_Sans_Pro "
+			>
 				Noteer
 			</h1>
 			<BsList
@@ -26,7 +31,10 @@ export const Navbar = () => {
 								<p class="capitalize">buy me a coffee</p>
 							</button>
 						</li>
-						<li class="cursor-pointer px-4 py-2 rounded-md hover:bg-slate-300 capitalize active:bg-transparent w-full h-12 items-center flex md:w-fit md:h-auto">
+						<li
+							onClick={() => navigate("/notebook")}
+							class="cursor-pointer px-4 py-2 rounded-md hover:bg-slate-300 capitalize active:bg-transparent w-full h-12 items-center flex md:w-fit md:h-auto"
+						>
 							<p>Notes</p>
 						</li>
 

@@ -2,8 +2,11 @@ import { Navbar } from "../components/Navbar";
 import { Button } from "../components/Button";
 import { BsGithub, BsTwitter } from "solid-icons/bs";
 import { SiBuymeacoffee } from "solid-icons/si";
+import { useNavigate } from "@solidjs/router";
 
-export const Home = () => {
+const Home = () => {
+	const navigate = useNavigate();
+
 	return (
 		<div>
 			<Navbar />
@@ -19,7 +22,12 @@ export const Home = () => {
 					</h1>
 					<div class="space-x-2">
 						<Button variant="frosted">Sign in</Button>
-						<Button variant="frosted-primary">I need to write now 😫</Button>
+						<Button
+							onClick={() => navigate("/notebook")}
+							variant="frosted-primary"
+						>
+							I need to write now 😫
+						</Button>
 					</div>
 				</div>
 				{/* resources used */}
@@ -44,3 +52,5 @@ export const Home = () => {
 		</div>
 	);
 };
+
+export default Home;

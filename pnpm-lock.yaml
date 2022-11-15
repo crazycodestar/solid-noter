@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@solidjs/router': ^0.5.0
   '@tiptap/core': 2.0.0-beta.202
   '@tiptap/extension-bubble-menu': 2.0.0-beta.202
   '@tiptap/starter-kit': 2.0.0-beta.202
@@ -18,6 +19,7 @@ specifiers:
   vite-plugin-solid: ^2.3.0
 
 dependencies:
+  '@solidjs/router': 0.5.0_solid-js@1.5.1
   '@tiptap/core': 2.0.0-beta.202
   '@tiptap/extension-bubble-menu': 2.0.0-beta.202_fosglmwb3u6jhi6bbjmnlbdsbu
   '@tiptap/starter-kit': 2.0.0-beta.202
@@ -415,6 +417,14 @@ packages:
 
   /@popperjs/core/2.11.6:
     resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
+    dev: false
+
+  /@solidjs/router/0.5.0_solid-js@1.5.1:
+    resolution: {integrity: sha512-rNR07l21tWWDVmCbaapggB89rEX7jlM2XChpTLqEGEnj46LzVZ8zgvjcF6NNKScByAlLpoQUkVIjB2KHpcMi+w==}
+    peerDependencies:
+      solid-js: ^1.5.3
+    dependencies:
+      solid-js: 1.5.1
     dev: false
 
   /@tiptap/core/2.0.0-beta.202:
