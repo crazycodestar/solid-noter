@@ -109,7 +109,7 @@ const Notes = () => {
 
 	return (
 		<div class="font-Source_Sans_Pro h-screen md:flex bg-slate-100">
-			<pre>{JSON.stringify(notes(), null, 2)}</pre>
+			{/* <pre>{JSON.stringify(notes(), null, 2)}</pre> */}
 			<FileTree
 				onSelectNote={handleSelectNote}
 				onCreateNote={handleCreateNote}
