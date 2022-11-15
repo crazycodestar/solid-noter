@@ -47,15 +47,7 @@ export function Notepad(props: INotepadProps): JSX.Element {
 				</Show>
 			</Toolbar>
 			<div class="text-lg font-semibold capitalize pb-2 pt-4 px-4 mb-3 border-b-2 flex space-x-2 items-center">
-				<h1>{props.note?.filename || "no File selected"}</h1>
-				{Boolean(props.note) ? (
-					<div class="flex space-x-2">
-						<div class="rounded-full w-4 h-4 bg-red-300" />
-						<div class="rounded-full w-4 h-4 bg-blue-300" />
-						<div class="rounded-full w-4 h-4 bg-green-300" />
-						<div class="rounded-full w-4 h-4 bg-yellow-300" />
-					</div>
-				) : null}
+				<h1>{props.note ? props.note.filename : "no File selected"}</h1>
 			</div>
 			<div class="pt-16 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent w-full max-h-max px-6 flex flex-col">
 				<Show when={Boolean(props.note)}>
@@ -68,7 +60,6 @@ export function Notepad(props: INotepadProps): JSX.Element {
 							class="resize-none scrollbar-none focus:outline-none max-w-2xl w-full text-3xl mb-4 tracking-wide"
 						/>
 						<div class="max-w-2xl w-full h-full" ref={setContainer} />
-						{/* <div class="basis-64" /> */}
 					</div>
 				</Show>
 			</div>

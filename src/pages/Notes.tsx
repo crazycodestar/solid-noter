@@ -11,7 +11,6 @@ export type NoteType = {
 		title: string;
 		content: string;
 	};
-	colorTag: string;
 	id: number;
 	selected: boolean;
 };
@@ -27,7 +26,6 @@ const NOTES = [
 			title: "",
 			content: PLACEHOLDER,
 		},
-		colorTag: "#ff0000",
 	},
 ];
 
@@ -36,6 +34,8 @@ export const Notes = () => {
 		...note,
 		selected: false,
 	}));
+
+	// TODO: convert from createSignal to createStore or use Zustand anyone
 	const [notes, setNotes] = createSignal<NoteType[]>(initNotes);
 
 	// const selectNote = (id: Id) =>
@@ -47,7 +47,7 @@ export const Notes = () => {
 	// 		})();
 	// 	});
 
-	const selectNote = (id: Id) => {
+	const handleSelectNote = (id: Id) => {
 		const noteId = notes().findIndex((note) => note.id === id);
 		if (noteId === -1) return;
 		return setNotes((init) => {
@@ -60,7 +60,7 @@ export const Notes = () => {
 		});
 	};
 
-	const createNote = () => {
+	const handleCreateNote = () => {
 		setNotes((init) => [
 			...init.map((note) => ({ ...note, selected: false })),
 			{
@@ -77,7 +77,7 @@ export const Notes = () => {
 		]);
 	};
 
-	const deleteNote = (id: Id) => {
+	const handleDeleteNote = (id: Id) => {
 		setNotes((init) => init.filter((note) => note.id !== id));
 	};
 
@@ -94,15 +94,27 @@ export const Notes = () => {
 		});
 	};
 
+	const handleSetNoteName = (id: Id, name: string) => {
+		const index = notes().findIndex((note) => note.id === id);
+		if (index === -1) return;
+
+		const nextState = produce<NoteType[]>((draft = notes()) => {
+			draft[index].filename = name;
+		});
+		// TODO: make check if the state is properly immutable and not just duplicating the entire thing
+		setNotes((state) => nextState(state));
+	};
+
 	const note = () => notes().find((note) => note.selected === true);
 
 	return (
 		<div class="font-Source_Sans_Pro h-screen md:flex bg-slate-100">
 			<pre>{JSON.stringify(notes(), null, 2)}</pre>
 			<FileTree
-				selectNote={selectNote}
-				createNote={createNote}
-				deleteNote={deleteNote}
+				onSelectNote={handleSelectNote}
+				onCreateNote={handleCreateNote}
+				onDeleteNote={handleDeleteNote}
+				onSetNoteName={handleSetNoteName}
 				notes={notes()}
 			/>
 			<Notepad note={note()} updateNote={updateNote} />

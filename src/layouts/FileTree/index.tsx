@@ -1,20 +1,29 @@
-import { BsPlus, BsChevronLeft } from "solid-icons/bs";
-import { For } from "solid-js";
+import {
+	BsPlus,
+	BsChevronLeft,
+	BsTrash,
+	BsPencil,
+	BsCheck,
+} from "solid-icons/bs";
+import { createSignal, For, Show } from "solid-js";
 import type { NoteType, Id } from "../../pages/Notes";
 
 interface IFileTreeProps {
 	notes: NoteType[];
-	selectNote: (id: Id) => void;
-	createNote: () => void;
-	deleteNote: (id: Id) => void;
+	onSelectNote: (id: Id) => void;
+	onCreateNote: () => void;
+	onDeleteNote: (id: Id) => void;
+	onSetNoteName: (id: Id, name: string) => void;
 }
 
 export const FileTree = (props: IFileTreeProps) => {
+	let inputRef: HTMLInputElement;
+
 	return (
 		<div class="fixed md:static z-50">
 			<div class="absolute w-screen h-screen bg-black opacity-40 top-0 left-0 md:hidden" />
 			<div class="absolute h-screen top-0 left-0 bottom-0 p-6 md:static">
-				<div class="h-full min-w-[250px] bg-white rounded-md p-4">
+				<div class="h-full bg-white w-[250px] rounded-md p-4">
 					<div class="mb-2 w-full flex justify-end">
 						<button class="rounded-full p-2 flex items-center bg-slate-100 hover:bg-slate-200 active:bg-slate-100 cursor-pointer justify-center">
 							<BsChevronLeft size={16} />
@@ -28,23 +37,87 @@ export const FileTree = (props: IFileTreeProps) => {
 						</span>
 					</div>
 					<ul class="space-y-3 mt-3">
-						<For each={props.notes}>
-							{(note) => {
-								return (
-									<li
-										onClick={() => props.selectNote(note.id)}
-										class={`rounded-md capitalize cursor-pointer p-2 space-x-2 flex items-center hover:bg-slate-100 ${
-											note.selected ? "bg-slate-200" : ""
-										}`}
-									>
-										{note.filename}
-									</li>
-								);
-							}}
-						</For>
-						<hr class="border-t-2" />
+						<Show when={Boolean(props.notes.length)}>
+							<For each={props.notes}>
+								{(note) => {
+									const [value, setValue] = createSignal("");
+									const [editMode, setEditMode] = createSignal(false);
+
+									const handleEditNoteName = () => {
+										setEditMode(true);
+										setValue(note.filename);
+										inputRef.focus();
+									};
+
+									const handleSetNoteName = () => {
+										console.log("handling set filename");
+										setEditMode(false);
+										props.onSetNoteName(note.id, value());
+										// call external set file name or something
+									};
+									return (
+										<li
+											onClick={() =>
+												props.notes[note.id].selected
+													? null
+													: props.onSelectNote(note.id)
+											}
+											class={`rounded-md justify-between capitalize cursor-pointer p-2 space-x-2 flex items-center hover:bg-slate-100 ${
+												note.selected ? "bg-slate-200" : ""
+											}`}
+										>
+											<Show
+												when={!editMode()}
+												fallback={
+													// TODO: Make the input to be rapped around a form - file name currently can be nothing
+													<input
+														onKeyDown={(e) =>
+															e.key === "Enter" ? handleSetNoteName() : null
+														}
+														value={value()}
+														onInput={(e) => setValue(e.currentTarget.value)}
+														ref={inputRef}
+														type="text"
+														class="w-full"
+													/>
+												}
+											>
+												{note.filename}
+											</Show>
+											<div class="flex space-x-2 items-center">
+												<Show
+													when={!editMode()}
+													fallback={
+														<div
+															onClick={handleSetNoteName}
+															class="active:bg-slate-300 rounded-full p-1.5 text-green-400"
+														>
+															<BsCheck size={24} />
+														</div>
+													}
+												>
+													<div
+														onClick={handleEditNoteName}
+														class="active:bg-slate-300 rounded-full p-1.5"
+													>
+														<BsPencil size={16} />
+													</div>
+												</Show>
+												<div
+													onClick={() => props.onDeleteNote(note.id)}
+													class="active:bg-slate-300 rounded-full p-1.5 text-red-400"
+												>
+													<BsTrash size={16} />
+												</div>
+											</div>
+										</li>
+									);
+								}}
+							</For>
+							<hr class="border-t-2" />
+						</Show>
 						<li
-							onClick={props.createNote}
+							onClick={props.onCreateNote}
 							class="rounded-md capitalize cursor-pointer p-2 space-x-2 flex items-center hover:bg-slate-100"
 						>
 							<BsPlus size={24} /> <p>New Note</p>
