@@ -19,25 +19,22 @@ export function Notepad(props: INotepadProps): JSX.Element {
 
   const content = () => props.note?.note.content;
   const editor = createMemo(on(props.triggerSignal, () => {
-    return createTiptapEditor(() => {
-      console.log('re-rendering editor')
-      const contentData = untrack(content);
-      return ({
-        element: container()!,
-        extensions: [
-          StarterKit,
-          BubbleMenu.configure({
-            element: menu()!,
-          }),
-        ],
-        editorProps: {
-          attributes: {
-            class: "focus:outline-none w-full content mb-16",
-          },
+    return createTiptapEditor(() => ({
+      element: container()!,
+      extensions: [
+        StarterKit,
+        BubbleMenu.configure({
+          element: menu()!,
+        }),
+      ],
+      editorProps: {
+        attributes: {
+          class: "focus:outline-none w-full content mb-16",
         },
-        content: contentData || "",
-      })
+      },
+      content: untrack(content) || "",
     })
+    )
   }))
 
   const html = useEditorHTML(() => editor()());
@@ -62,7 +59,7 @@ export function Notepad(props: INotepadProps): JSX.Element {
       </div>
       <div class="pt-16 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent w-full max-h-max px-6 flex flex-col">
         <div class="flex flex-col items-center h-full">
-          {/*TODO: resize not working for title text-area*/}
+          {/*ISSUE: resize not working for title text-area*/}
           <textarea
             cols={1}
             rows={1}
