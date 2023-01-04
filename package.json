@@ -6,11 +6,15 @@
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "cypress:open": "cypress open",
+    "start:test": "concurrently \"vite\" \"cypress open\" "
   },
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^10.4.13",
+    "concurrently": "^7.6.0",
+    "cypress": "^12.3.0",
     "postcss": "^8.4.19",
     "solid-devtools": "^0.24.6",
     "tailwind-scrollbar": "^2.0.1",

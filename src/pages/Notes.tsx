@@ -21,7 +21,7 @@ export type Id = ExtractType<NoteType, "id">;
 const NOTES = [
   {
     id: 0,
-    filename: "file 1",
+    filename: "get started",
     note: {
       title: "",
       content: PLACEHOLDER,
@@ -142,7 +142,7 @@ const Notes = () => {
       {/*   }} */}
       {/* </For> */}
       <Show when={Boolean(note())}>
-        <Notepad triggerSignal={triggerSignal()} note={note()} onSaveNote={(content) => handleSaveNote(note()!.id, content)} onUpdateTitle={(title) => handleUpdateTitle(note()!.id, title)} />
+        <Notepad triggerSignal={triggerSignal()} note={note()!} onSaveNote={(content) => handleSaveNote(note()!.id, content)} onUpdateTitle={(title) => handleUpdateTitle(note()!.id, title)} />
       </Show>
     </div>
   );

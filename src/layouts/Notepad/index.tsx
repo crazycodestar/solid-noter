@@ -68,7 +68,7 @@ export function Notepad(props: INotepadProps): JSX.Element {
             placeholder="Title"
             class="resize-none scrollbar-none focus:outline-none max-w-2xl w-full text-3xl mb-4 tracking-wide"
           />
-          <div class="max-w-2xl w-full h-full" ref={setContainer} />
+          <div data-test="notepad_parent" class="max-w-2xl w-full h-full" ref={setContainer} />
         </div>
       </div>
     </div>
