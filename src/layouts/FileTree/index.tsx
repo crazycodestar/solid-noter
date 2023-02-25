@@ -50,7 +50,6 @@ export const FileTree = (props: IFileTreeProps) => {
                   };
 
                   const handleSetNoteName = () => {
-                    console.log("handling set filename");
                     setEditMode(false);
                     props.onSetNoteName(note.id, value());
                     // call external set file name or something
@@ -58,9 +57,7 @@ export const FileTree = (props: IFileTreeProps) => {
                   return (
                     <li
                       onClick={() =>
-                        props.notes[note.id].selected
-                          ? null
-                          : props.onSelectNote(note.id)
+                        props.onSelectNote(note.id)
                       }
                       class={`rounded-md justify-between capitalize cursor-pointer p-2 space-x-2 flex items-center hover:bg-slate-100 ${note.selected ? "bg-slate-200" : ""
                         }`}
@@ -81,7 +78,10 @@ export const FileTree = (props: IFileTreeProps) => {
                           />
                         }
                       >
-                        {note.filename}
+                        <p class="truncate">
+
+                          {note.filename}
+                        </p>
                       </Show>
                       <div class="flex space-x-2 items-center">
                         <Show

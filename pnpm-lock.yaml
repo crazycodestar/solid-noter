@@ -6,6 +6,7 @@ specifiers:
   '@tiptap/extension-bubble-menu': 2.0.0-beta.202
   '@tiptap/starter-kit': 2.0.0-beta.202
   autoprefixer: ^10.4.13
+  classnames: ^2.3.2
   concurrently: ^7.6.0
   cypress: ^12.3.0
   immer: ^9.0.16
@@ -26,6 +27,7 @@ dependencies:
   '@tiptap/core': 2.0.0-beta.202
   '@tiptap/extension-bubble-menu': 2.0.0-beta.202_fosglmwb3u6jhi6bbjmnlbdsbu
   '@tiptap/starter-kit': 2.0.0-beta.202_gjug6zz6yccoopzlf25lfq4swa
+  classnames: 2.3.2
   immer: 9.0.16
   solid-headless: 0.13.0_solid-js@1.6.6
   solid-icons: 1.0.4_solid-js@1.6.6
@@ -2308,6 +2310,10 @@ packages:
     resolution: {integrity: sha512-4jYS4MOAaCIStSRwiuxc4B8MYhIe676yO1sYGzARnjXkWpmzZMMYxY6zu8WYWDhSuth5zhrQ1rhNSibyyvv4/w==}
     engines: {node: '>=8'}
     dev: true
+
+  /classnames/2.3.2:
+    resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
+    dev: false
 
   /clean-stack/2.2.0:
     resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==}

@@ -2,15 +2,13 @@ import { createMemo, createSignal, For, Show, untrack } from "solid-js";
 import { FileTree } from "../layouts/FileTree";
 import { Notepad } from "../layouts/Notepad";
 import produce from "immer";
+import BufferLine from "../layouts/BufferLine";
 
 const PLACEHOLDER = "<P> Start Writing Here </p>";
 
 export type NoteType = {
   filename: string;
-  note: {
-    title: string;
-    content: string;
-  };
+  content: string;
   id: number;
   selected: boolean;
 };
@@ -22,10 +20,7 @@ const NOTES = [
   {
     id: 0,
     filename: "get started",
-    note: {
-      title: "",
-      content: PLACEHOLDER,
-    },
+    content: PLACEHOLDER,
   },
 ];
 
@@ -34,9 +29,9 @@ const Notes = () => {
     ...note,
     selected: false,
   }));
-
   // TODO: convert from createSignal to createStore or use Zustand anyone
   const [notes, setNotes] = createSignal<NoteType[]>(initNotes);
+  const [indexPos, setIndexPos] = createSignal<number>(notes().length);
 
   const handleSelectNote = (id: Id) => {
     const noteId = notes().findIndex((note) => note.id === id);
@@ -53,33 +48,17 @@ const Notes = () => {
     setNotes((init) => [
       ...init.map((note) => ({ ...note, selected: false })),
       {
-        id: init.length,
-        note: {
-          title: "",
-
-          content: PLACEHOLDER,
-        },
-        filename: "New File",
+        id: indexPos(),
+        content: PLACEHOLDER,
+        filename: "Untitled",
         selected: true,
       },
     ]);
+    setIndexPos(init => init + 1);
   };
 
   const handleDeleteNote = (id: Id) => {
     setNotes((init) => init.filter((note) => note.id !== id));
-  };
-
-  const updateNote = (
-    id: Id,
-    newVal: { [T in keyof NoteType]: ExtractType<NoteType, T> }
-  ) => {
-    setNotes((init) => {
-      return produce<NoteType[]>((init, draft) => {
-        const note = draft.find((note) => note.id === id);
-        if (!note) return;
-        Object.assign(note, newVal);
-      })();
-    });
   };
 
   const handleSetNoteName = (id: Id, name: string) => {
@@ -98,18 +77,7 @@ const Notes = () => {
     if (index === -1) return;
 
     const nextState = produce<NoteType[]>((draft = notes()) => {
-      draft[index].note.content = note;
-    });
-    // TODO: make check if the state is properly immutable and not just duplicating the entire thing
-    setNotes((state) => nextState(state));
-  };
-
-  const handleUpdateTitle = (id: Id, title: string) => {
-    const index = notes().findIndex((note) => note.id === id);
-    if (index === -1) return;
-
-    const nextState = produce<NoteType[]>((draft = notes()) => {
-      draft[index].note.title = title;
+      draft[index].content = note;
     });
     // TODO: make check if the state is properly immutable and not just duplicating the entire thing
     setNotes((state) => nextState(state));
@@ -122,6 +90,7 @@ const Notes = () => {
 
   return (
     <div class="font-Source_Sans_Pro h-screen md:flex bg-slate-100">
+      {/* <pre>{JSON.stringify(notes(), null, 2)}</pre> */}
       <FileTree
         onSelectNote={handleSelectNote}
         onCreateNote={handleCreateNote}
@@ -141,9 +110,14 @@ const Notes = () => {
       {/*     ) */}
       {/*   }} */}
       {/* </For> */}
-      <Show when={Boolean(note())}>
-        <Notepad triggerSignal={triggerSignal()} note={note()!} onSaveNote={(content) => handleSaveNote(note()!.id, content)} onUpdateTitle={(title) => handleUpdateTitle(note()!.id, title)} />
-      </Show>
+      <div class="md:mt-6 md:rounded-md md:mb-6 md:mr-6 w-full bg-gray-100 flex flex-col">
+        <BufferLine buffers={notes()} onSelectNote={handleSelectNote} onCreateNote={handleCreateNote} triggerSignal={triggerSignal()} deleteTriggerSignal={notes} />
+        <div class="bg-white w-full h-full">
+          <Show when={Boolean(note())}>
+            <Notepad triggerSignal={triggerSignal()} note={note()!} onSaveNote={(content) => handleSaveNote(note()!.id, content)} onUpdateFilename={(title) => handleSetNoteName(note()!.id, title)} />
+          </Show>
+        </div>
+      </div>
     </div>
   );
 };
