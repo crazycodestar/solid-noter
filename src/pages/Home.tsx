@@ -21,7 +21,9 @@ const Home = () => {
 						. An award winning app for putting down your thoughts
 					</h1>
 					<div class="space-x-2">
-						<Button variant="frosted">Sign in</Button>
+						<Button variant="frosted" onClick={() => navigate("/signin")}>
+							Sign in
+						</Button>
 						<Button
 							onClick={() => navigate("/notebook")}
 							variant="frosted-primary"

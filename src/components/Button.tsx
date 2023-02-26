@@ -9,15 +9,16 @@ type Variants =
 	| "secondary";
 
 type Size = "sm" | "md" | "lg";
+type Width = "long";
 
-interface IButtonProps {
+interface IButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
 	children: JSX.Element;
-	onClick?: () => void;
 	variant?: Variants;
 	size?: Size;
+	width?: Width;
 }
 export const Button = (props: IButtonProps) => {
-	const { children, onClick, variant = "primary", size = "md" } = props;
+	const { children, onClick, variant = "primary", size = "md", width } = props;
 
 	const generateStyles = () => {
 		let baseStyles =
@@ -63,6 +64,12 @@ export const Button = (props: IButtonProps) => {
 
 			case "lg":
 				baseStyles = baseStyles.concat(" ", "h-18");
+				break;
+		}
+
+		switch (width) {
+			case "long":
+				baseStyles = baseStyles.concat(" ", "w-full");
 				break;
 		}
 

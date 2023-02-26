@@ -6,6 +6,7 @@ import {
 	createSignal,
 	For,
 	on,
+	Resource,
 } from "solid-js";
 import { FaSolidPlus, FaSolidXmark } from "solid-icons/fa";
 import { NoteType } from "../../pages/Notes";
@@ -17,7 +18,7 @@ interface IBufferLineProps {
 	onSelectNote: (id: Id) => void;
 	onCreateNote: () => void;
 	triggerSignal: Accessor<number>;
-	deleteTriggerSignal: Accessor<NoteType[]>;
+	deleteTriggerSignal: Resource<NoteType[]>;
 }
 
 const BufferLine: Component<IBufferLineProps> = (props) => {

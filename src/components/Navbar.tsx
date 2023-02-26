@@ -11,7 +11,7 @@ export const Navbar = () => {
 		<div class="backdrop-blur-sm h-16 fixed top-0 md:justify-between w-screen flex items-center justify-between px-8 z-50">
 			<h1
 				onClick={() => navigate("/")}
-				class="text-2xl font-bold tracking-wider font-Source_Sans_Pro "
+				class="text-2xl font-bold tracking-wider font-Source_Sans_Pro cursor-pointer"
 			>
 				Noteer
 			</h1>
@@ -38,7 +38,10 @@ export const Navbar = () => {
 							<p>Notes</p>
 						</li>
 
-						<li class="cursor-pointer px-4 py-2 rounded-md bg-blue-400 text-white capitalize active:bg-blue-400 hover:bg-blue-300 w-full h-12 items-center flex md:w-fit md:h-auto">
+						<li
+							onClick={() => navigate("/signin")}
+							class="cursor-pointer px-4 py-2 rounded-md bg-blue-400 text-white capitalize active:bg-blue-400 hover:bg-blue-300 w-full h-12 items-center flex md:w-fit md:h-auto"
+						>
 							<p>sign in</p>
 						</li>
 					</ul>
