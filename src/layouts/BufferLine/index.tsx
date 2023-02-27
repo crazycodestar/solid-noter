@@ -17,7 +17,7 @@ interface IBufferLineProps {
 	buffers: NoteType[];
 	onSelectNote: (id: Id) => void;
 	onCreateNote: () => void;
-	triggerSignal: Accessor<number>;
+	triggerSignal: Accessor<number | undefined>;
 	deleteTriggerSignal: Resource<NoteType[]>;
 }
 

@@ -39,7 +39,14 @@ export const FileTree = (props: IFileTreeProps) => {
 					<ul data-test="filetree" class="space-y-3 mt-3">
 						<Show
 							when={Boolean(props.notes()?.length)}
-							fallback={<p>loading...</p>}
+							fallback={
+								<Show
+									when={Boolean(props.notes.loading)}
+									fallback={<p>You have no notes</p>}
+								>
+									<p>loading...</p>
+								</Show>
+							}
 						>
 							<For each={props.notes()}>
 								{(note) => {

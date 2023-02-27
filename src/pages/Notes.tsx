@@ -1,4 +1,5 @@
 import {
+	Accessor,
 	createMemo,
 	createResource,
 	createSignal,
@@ -40,11 +41,41 @@ const Notes = () => {
 				selected: false,
 			});
 		});
+		notes[0].selected = true;
 		// const results = (await getDocs(q)) as unknown as noteDoc[];
 		return notes;
 	};
 	const [notes, { mutate, refetch }] = createResource<NoteType[]>(getNotes);
 	// const [notes, setNotes] = createSignal<NoteType[]>(initNotes);
+
+	const handleSaveNameToCloud = (id: Id) => {
+		// TODO: updatee the name on the cloud
+	};
+
+	const handleSaveNoteToCloud = (id: Id) => {
+		// TODO: update the note on the cloud
+	};
+
+	// TODO: debounce function;
+	const debounce = (func: () => void) => {
+		return () => {
+			const TIMEOUT = 3000;
+			let triggerUpload: NodeJS.Timeout | undefined;
+			const startDebounce = () => {
+				triggerUpload = setTimeout(func, TIMEOUT);
+			};
+
+			const resetDebounce = () => {
+				if (triggerUpload) clearTimeout(triggerUpload);
+				triggerUpload = setTimeout(func, TIMEOUT);
+			};
+
+			return {
+				startDebounce,
+				resetDebounce,
+			};
+		};
+	};
 
 	const handleSelectNote = (id: Id) => {
 		const noteId = notes()?.findIndex((note) => note.id === id);
@@ -74,42 +105,47 @@ const Notes = () => {
 				},
 			];
 			if (!deselectedNotes) return newNotes;
-			return newNotes.concat(deselectedNotes);
+			return deselectedNotes.concat(newNotes);
 		});
+		// TODO: call handleSaveNoteToCloud || maybe handleCreateNoteInCloud func
 	};
 
 	const handleDeleteNote = (id: Id) => {
 		mutate((init) => init?.filter((note) => note.id !== id) || []);
+		// TODO: call handleDeleteNoteInCloud
 	};
 
 	const handleSetNoteName = (id: Id, name: string) => {
 		const index = notes()?.findIndex((note) => note.id === id);
-		if (index === -1 || !index) return;
+		if (index === -1 || index === undefined) return;
 
 		const nextState = produce<NoteType[]>((draft = notes() || []) => {
 			draft[index].filename = name;
 		});
 		// TODO: make check if the state is properly immutable and not just duplicating the entire thing
 		mutate((state) => nextState(state));
+		// TODO: call handleSaveNameToCloud func
 	};
 
 	const handleSaveNote = (id: Id, note: string) => {
 		const index = notes()?.findIndex((note) => note.id === id);
-		if (index === -1 || !index) return;
+		if (index === -1 || index === undefined) return;
 
 		const nextState = produce<NoteType[]>((draft = notes() || []) => {
 			draft[index].content = note;
 		});
 		// TODO: make check if the state is properly immutable and not just duplicating the entire thing
 		mutate((state) => nextState(state));
+		// TODO: call handleSaveNoteToCloud func
 	};
 
 	const note = () => {
 		return notes()?.find((note) => note.selected === true);
 	};
-	const triggerSignal = () =>
+	const triggerSignal = (): Accessor<number | undefined> =>
 		createMemo(() => {
-			return notes()?.findIndex((note) => note.selected) || 0;
+			const result = notes()?.findIndex((note) => note.selected);
+			return result;
 		});
 
 	return (
@@ -145,8 +181,8 @@ const Notes = () => {
 				<div class="bg-white w-full h-full">
 					<Show when={Boolean(note())}>
 						<Notepad
-							triggerSignal={triggerSignal()}
 							note={note()!}
+							triggerSignal={triggerSignal()}
 							onSaveNote={(content) => handleSaveNote(note()!.id, content)}
 							onUpdateFilename={(title) => handleSetNoteName(note()!.id, title)}
 						/>
