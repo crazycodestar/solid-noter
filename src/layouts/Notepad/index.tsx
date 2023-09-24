@@ -62,7 +62,7 @@ export function Notepad(): JSX.Element {
 
 	return (
 		<Show when={Boolean(activeNoteId)} fallback={<p>none selected</p>}>
-			<Show when={Boolean(content())} fallback={<p>Fetching notes</p>}>
+			<Show when={Boolean(content())} fallback={<p>Select Note</p>}>
 				<Toolbar
 					ref={setMenu}
 					class="dynamic-shadow bg-gradient-to-bl from-indigo-500 to-blue-600 text-white rounded-lg"

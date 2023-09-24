@@ -1,7 +1,8 @@
 import { createMemo, For } from "solid-js";
-import { FaSolidPlus, FaSolidXmark } from "solid-icons/fa";
+import { FaSolidPlus, FaSolidXmark, FaSolidBars } from "solid-icons/fa";
 import classNames from "classnames";
 import { useNotes } from "../../context/NotesProvider";
+import { useLayout } from "../../context/LayoutProvider";
 
 const BufferLine = () => {
 	const {
@@ -12,9 +13,16 @@ const BufferLine = () => {
 		notes,
 		handleSelectNote,
 	} = useNotes();
+	const { toggleSideBar } = useLayout();
 	return (
 		<div class="flex w-full items-center h-10 min-h-[40px]">
 			{/* <pre>{JSON.stringify(bufferArray(), null, 2)}</pre> */}
+			<button
+				class="rounded-sm p-2 ml-2 hover:bg-gray-300 md:hidden"
+				onClick={toggleSideBar}
+			>
+				<FaSolidBars />
+			</button>
 			<For each={buffers()}>
 				{(noteId, index) => {
 					const note = () => notes()?.find((note) => note.id === noteId);

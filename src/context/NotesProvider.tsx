@@ -28,8 +28,6 @@ type NotesContext = {
 	isSaving: () => boolean;
 };
 
-const PLACEHOLDER = "<P> Start Writing Here </p>";
-
 const defaultValues: NotesContext = {
 	buffers: () => [],
 	activeNoteId: () => undefined,

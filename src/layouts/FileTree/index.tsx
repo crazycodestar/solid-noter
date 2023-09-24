@@ -10,6 +10,7 @@ import { createResource, createSignal, For, Show } from "solid-js";
 import { auth } from "../../config/firebase";
 import { useNavigate } from "@solidjs/router";
 import { useNotes } from "../../context/NotesProvider";
+import { useLayout } from "../../context/LayoutProvider";
 
 export const FileTree = () => {
 	const navigate = useNavigate();
@@ -39,10 +40,18 @@ export const FileTree = () => {
 
 	const handleGoToHome = () => navigate("/");
 
+	const { isSideBarOpen, toggleSideBar } = useLayout();
+
 	return (
 		<div class="fixed md:static z-50">
-			<div class="absolute w-screen h-screen bg-black opacity-40 top-0 left-0 md:hidden" />
-			<div class="absolute h-screen top-0 left-0 bottom-0 p-6 md:static">
+			<div
+				data-visible={isSideBarOpen()}
+				class="absolute w-screen h-screen bg-black opacity-40 top-0 left-0 md:hidden data-[visible=false]:hidden"
+			/>
+			<div
+				data-visible={isSideBarOpen()}
+				class="absolute h-screen top-0 left-0 bottom-0 p-6 md:static data-[visible=false]:hidden md:data-[visible=false]:block"
+			>
 				<div class="h-full bg-white w-[250px] rounded-md p-4">
 					<div class="mb-2 w-full flex justify-end">
 						<button
@@ -51,7 +60,10 @@ export const FileTree = () => {
 						>
 							<BsHouse size={16} />
 						</button>
-						<button class="rounded-full p-2 flex items-center bg-slate-100 hover:bg-slate-200 active:bg-slate-100 cursor-pointer justify-center">
+						<button
+							onClick={toggleSideBar}
+							class="rounded-full p-2 flex items-center bg-slate-100 hover:bg-slate-200 active:bg-slate-100 cursor-pointer justify-center md:hidden"
+						>
 							<BsChevronLeft size={16} />
 						</button>
 					</div>
