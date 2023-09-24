@@ -44,7 +44,7 @@ const SignIn = () => {
 		onSubmit: async (values) => {
 			try {
 				if (state() === "sign up") {
-					await createUserWithEmailAndPassword(
+					const result = await createUserWithEmailAndPassword(
 						auth,
 						values.email,
 						values.password

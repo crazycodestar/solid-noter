@@ -4,20 +4,40 @@ import {
 	BsTrash,
 	BsPencil,
 	BsCheck,
+	BsHouse,
 } from "solid-icons/bs";
-import { createResource, createSignal, For, Resource, Show } from "solid-js";
-import type { NoteType, Id } from "../../pages/Notes";
+import { createResource, createSignal, For, Show } from "solid-js";
+import { auth } from "../../config/firebase";
+import { useNavigate } from "@solidjs/router";
+import { useNotes } from "../../context/NotesProvider";
 
-interface IFileTreeProps {
-	notes: Resource<NoteType[]>;
-	onSelectNote: (id: Id) => void;
-	onCreateNote: () => void;
-	onDeleteNote: (id: Id) => void;
-	onSetNoteName: (id: Id, name: string) => void;
-}
-
-export const FileTree = (props: IFileTreeProps) => {
+export const FileTree = () => {
+	const navigate = useNavigate();
+	const {
+		notes,
+		handleCreateNote,
+		handleDeleteNote,
+		handleSelectNote,
+		handleSetNoteName,
+		isLoading,
+		activeNoteId,
+	} = useNotes();
 	let inputRef: HTMLInputElement;
+
+	const getUser = async () => {
+		const user = auth.currentUser;
+		if (!user) return;
+		return user?.displayName || user.email;
+	};
+
+	const [user] = createResource(getUser);
+
+	const handleSignOut = () => {
+		auth.signOut();
+		return navigate("/signin");
+	};
+
+	const handleGoToHome = () => navigate("/");
 
 	return (
 		<div class="fixed md:static z-50">
@@ -25,30 +45,39 @@ export const FileTree = (props: IFileTreeProps) => {
 			<div class="absolute h-screen top-0 left-0 bottom-0 p-6 md:static">
 				<div class="h-full bg-white w-[250px] rounded-md p-4">
 					<div class="mb-2 w-full flex justify-end">
+						<button
+							onClick={handleGoToHome}
+							class="rounded-full p-2 flex items-center bg-slate-100 hover:bg-slate-200 active:bg-slate-100 cursor-pointer justify-center"
+						>
+							<BsHouse size={16} />
+						</button>
 						<button class="rounded-full p-2 flex items-center bg-slate-100 hover:bg-slate-200 active:bg-slate-100 cursor-pointer justify-center">
 							<BsChevronLeft size={16} />
 						</button>
 					</div>
 					<div class="flex space-x-2 items-center border-b-2 pb-2">
 						{/* add line height here */}
-						<h1 class="text-lg font-lg font-semibold">Olalekan Adekanmbi</h1>
-						<span class="rounded-md whitespace-nowrap cursor-pointer text-sm px-2 py-1 bg-blue-200">
+						<h1 class="text-lg font-lg font-semibold truncate">{user()}</h1>
+						<span
+							onClick={handleSignOut}
+							class="rounded-md whitespace-nowrap cursor-pointer text-sm px-2 py-1 bg-blue-200"
+						>
 							sign out
 						</span>
 					</div>
 					<ul data-test="filetree" class="space-y-3 mt-3">
 						<Show
-							when={Boolean(props.notes()?.length)}
+							when={Boolean(notes())}
 							fallback={
 								<Show
-									when={Boolean(props.notes.loading)}
+									when={!isLoading && !notes()?.length}
 									fallback={<p>You have no notes</p>}
 								>
 									<p>loading...</p>
 								</Show>
 							}
 						>
-							<For each={props.notes()}>
+							<For each={notes()}>
 								{(note) => {
 									const [value, setValue] = createSignal("");
 									const [editMode, setEditMode] = createSignal(false);
@@ -59,17 +88,18 @@ export const FileTree = (props: IFileTreeProps) => {
 										inputRef.focus();
 									};
 
-									const handleSetNoteName = () => {
+									const handleSetName = () => {
 										setEditMode(false);
-										props.onSetNoteName(note.id, value());
+										handleSetNoteName(note.id, value());
 										// call external set file name or something
 									};
+
+									const isSelectedNote = () => note.id === activeNoteId();
 									return (
 										<li
-											onClick={() => props.onSelectNote(note.id)}
-											class={`rounded-md justify-between capitalize cursor-pointer p-2 space-x-2 flex items-center hover:bg-slate-100 ${
-												note.selected ? "bg-slate-200" : ""
-											}`}
+											onClick={() => handleSelectNote(note.id)}
+											data-selected={isSelectedNote()}
+											class={`rounded-md justify-between capitalize cursor-pointer p-2 space-x-2 flex items-center hover:bg-slate-100 data-[selected=true]:bg-slate-200`}
 										>
 											<Show
 												when={!editMode()}
@@ -77,7 +107,7 @@ export const FileTree = (props: IFileTreeProps) => {
 													// TODO: Make the input to be rapped around a form - file name currently can be nothing
 													<input
 														onKeyDown={(e) =>
-															e.key === "Enter" ? handleSetNoteName() : null
+															e.key === "Enter" ? handleSetName() : null
 														}
 														value={value()}
 														onInput={(e) => setValue(e.currentTarget.value)}
@@ -94,7 +124,7 @@ export const FileTree = (props: IFileTreeProps) => {
 													when={!editMode()}
 													fallback={
 														<div
-															onClick={handleSetNoteName}
+															onClick={handleSetName}
 															class="active:bg-slate-300 rounded-full p-1.5 text-green-400"
 														>
 															<BsCheck size={24} />
@@ -109,7 +139,10 @@ export const FileTree = (props: IFileTreeProps) => {
 													</div>
 												</Show>
 												<div
-													onClick={() => props.onDeleteNote(note.id)}
+													onClick={(e) => {
+														e.stopPropagation();
+														handleDeleteNote(note.id);
+													}}
 													class="active:bg-slate-300 rounded-full p-1.5 text-red-400"
 												>
 													<BsTrash size={16} />
@@ -122,7 +155,7 @@ export const FileTree = (props: IFileTreeProps) => {
 							<hr class="border-t-2" />
 						</Show>
 						<li
-							onClick={props.onCreateNote}
+							onClick={handleCreateNote}
 							class="rounded-md capitalize cursor-pointer p-2 space-x-2 flex items-center hover:bg-slate-100"
 							data-test="create_new_note"
 						>

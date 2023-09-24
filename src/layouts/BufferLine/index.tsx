@@ -1,70 +1,27 @@
-import {
-	Accessor,
-	Component,
-	createEffect,
-	createMemo,
-	createSignal,
-	For,
-	on,
-	Resource,
-} from "solid-js";
+import { createMemo, For } from "solid-js";
 import { FaSolidPlus, FaSolidXmark } from "solid-icons/fa";
-import { NoteType } from "../../pages/Notes";
 import classNames from "classnames";
-import { Id } from "../../pages/Notes";
+import { useNotes } from "../../context/NotesProvider";
 
-interface IBufferLineProps {
-	buffers: NoteType[];
-	onSelectNote: (id: Id) => void;
-	onCreateNote: () => void;
-	triggerSignal: Accessor<number | undefined>;
-	deleteTriggerSignal: Resource<NoteType[]>;
-}
-
-const BufferLine: Component<IBufferLineProps> = (props) => {
-	const [bufferArray, setBufferArray] = createSignal<NoteType[]>([]);
-
-	createEffect(
-		on(props.triggerSignal, () => {
-			// selection
-			const activeBuffer = props.buffers.find(({ selected }) => selected);
-			if (!activeBuffer) return;
-
-			const nextBufferArray = bufferArray().map((buffer) => ({
-				...buffer,
-				selected: false,
-			}));
-
-			const index = bufferArray().findIndex(({ id }) => id == activeBuffer.id);
-			if (index == -1) {
-				nextBufferArray.push({ ...activeBuffer });
-			} else {
-				nextBufferArray[index].selected = true;
-			}
-
-			setBufferArray(nextBufferArray);
-		})
-	);
-
-	createEffect(
-		on(props.deleteTriggerSignal, () => {
-			setBufferArray((state) =>
-				state.filter((buffer) =>
-					Boolean(props.buffers.find(({ id }) => buffer.id == id))
-				)
-			);
-		})
-	);
-
-	const handleCloseBuffer = (id: Id) => {
-		setBufferArray((state) => state.filter((buffer) => buffer.id != id));
-	};
-
+const BufferLine = () => {
+	const {
+		buffers,
+		activeNoteId,
+		handleCreateNote,
+		handleRemoveFromBufferLine,
+		notes,
+		handleSelectNote,
+	} = useNotes();
 	return (
 		<div class="flex w-full items-center h-10 min-h-[40px]">
 			{/* <pre>{JSON.stringify(bufferArray(), null, 2)}</pre> */}
-			<For each={bufferArray()}>
-				{({ filename, selected, id }, index) => {
+			<For each={buffers()}>
+				{(noteId, index) => {
+					const note = () => notes()?.find((note) => note.id === noteId);
+					if (!note) return;
+
+					const bufferLine = () => note()?.id === activeNoteId();
+
 					const variants = createMemo(() => {
 						const defaults = [
 							"w-[150px]",
@@ -76,29 +33,39 @@ const BufferLine: Component<IBufferLineProps> = (props) => {
 							"ease-out",
 							"duration-300",
 						];
-						const isNextSelected = props.buffers[index() + 1]?.selected;
+						// const isNextSelected = props.buffers[index() + 1]?.selected;
 						return classNames(defaults, {
-							"py-2": selected,
-							"bg-white": selected,
-							"rounded-t-md": selected,
-							"border-r-2": !selected && !isNextSelected,
-							"border-r-gray-400": !selected && !isNextSelected,
-							"h-fit": !selected,
-							"hover:bg-white/60": !selected,
-							"hover:py-2": !selected,
-							"hover:bg-white": !selected,
-							"hover:rounded-t-md": !selected,
-							"hover:border-r-transparent": !selected,
+							"py-2": bufferLine(),
+							"bg-white": bufferLine(),
+							"rounded-t-md": bufferLine(),
+							// "border-r-2": !bufferLine() && !isNextSelected,
+							// "border-r-gray-400": !bufferLine() && !isNextSelected,
+							"h-fit": !bufferLine(),
+							"hover:bg-white/60": !bufferLine(),
+							"hover:py-2": !bufferLine(),
+							"hover:bg-white": !bufferLine(),
+							"hover:rounded-t-md": !bufferLine(),
+							"hover:border-r-transparent": !bufferLine(),
 						});
 					});
+
+					const handleSelectNoteById = () => {
+						const id = note()?.id;
+						if (!id) return;
+						handleSelectNote(id);
+					};
+
 					return (
-						<div class={variants()} onClick={() => props.onSelectNote(id)}>
-							<p class="capitalize truncate">{filename}</p>
+						<div class={variants()} onClick={handleSelectNoteById}>
+							<p class="capitalize truncate">{note()?.filename}</p>
 							<button
+								type="button"
 								class="hover:bg-gray-200 p-1 rounded-full"
 								onClick={(e) => {
 									e.stopPropagation();
-									handleCloseBuffer(id);
+									const id = note()?.id;
+									id ? handleRemoveFromBufferLine(id) : null;
+									// handleCloseBuffer(id);
 								}}
 							>
 								<FaSolidXmark />
@@ -109,7 +76,7 @@ const BufferLine: Component<IBufferLineProps> = (props) => {
 			</For>
 			<button
 				class="rounded-full p-2 ml-2 hover:bg-gray-300"
-				onClick={props.onCreateNote}
+				onClick={handleCreateNote}
 			>
 				<FaSolidPlus />
 			</button>

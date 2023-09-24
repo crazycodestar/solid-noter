@@ -1,11 +1,22 @@
 import { SiBuymeacoffee } from "solid-icons/si";
 import { BsList } from "solid-icons/bs";
-import { createSignal, Show } from "solid-js";
+import { createResource, createSignal, Show } from "solid-js";
 import { useNavigate } from "@solidjs/router";
+import { auth } from "../config/firebase";
 
 export const Navbar = () => {
 	const navigate = useNavigate();
 	const [dropdownState, setDropdownState] = createSignal<boolean>(true);
+	const getIsSignedIn = () => {
+		return Boolean(auth.currentUser);
+	};
+	const [isSignedIn] = createResource(getIsSignedIn);
+
+	const handleSignOut = () => {
+		auth.signOut();
+		return navigate("/signin");
+	};
+
 	// make dropdown true when not in mobile view
 	return (
 		<div class="backdrop-blur-sm h-16 fixed top-0 md:justify-between w-screen flex items-center justify-between px-8 z-50">
@@ -37,13 +48,24 @@ export const Navbar = () => {
 						>
 							<p>Notes</p>
 						</li>
-
-						<li
-							onClick={() => navigate("/signin")}
-							class="cursor-pointer px-4 py-2 rounded-md bg-blue-400 text-white capitalize active:bg-blue-400 hover:bg-blue-300 w-full h-12 items-center flex md:w-fit md:h-auto"
+						<Show
+							when={isSignedIn()}
+							fallback={
+								<li
+									onClick={handleSignOut}
+									class="cursor-pointer px-4 py-2 rounded-md bg-blue-400 text-white capitalize active:bg-blue-400 hover:bg-blue-300 w-full h-12 items-center flex md:w-fit md:h-auto"
+								>
+									<p>sign in</p>
+								</li>
+							}
 						>
-							<p>sign in</p>
-						</li>
+							<li
+								onClick={() => navigate("/signin")}
+								class="cursor-pointer px-4 py-2 rounded-md bg-blue-400 text-white capitalize active:bg-blue-400 hover:bg-blue-300 w-full h-12 items-center flex md:w-fit md:h-auto"
+							>
+								<p>sign out</p>
+							</li>
+						</Show>
 					</ul>
 				</div>
 			</Show>
